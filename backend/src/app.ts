@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import PlaceRouter from "./routes/places-routes";
-import UserRouter from "./routes/users-routes";
+
 import CustomError from "./model/custom-error";
 
 const app = express();
@@ -8,7 +8,6 @@ const app = express();
 app.use(express.json());
 
 app.use("/api/places", PlaceRouter);
-app.use(UserRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof CustomError) {
