@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(PlaceRouter);
+app.use("/api/places", PlaceRouter);
 app.use(UserRouter);
 
 const PORT = process.env.PORT || 5001;
