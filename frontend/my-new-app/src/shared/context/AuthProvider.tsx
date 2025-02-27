@@ -9,8 +9,15 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const calculateRemainingTime = (expirationTime: string) => {
+  const currentTime = new Date().getTime();
+  const expirationTimeInMillis = new Date(expirationTime).getTime();
+  return expirationTimeInMillis - currentTime;
+};
+
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,21 +33,15 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         logout();
       }
     }
-  });
-
-  const calculateRemainingTime = (expirationTime: string) => {
-    const currentTime = new Date().getTime();
-    const expirationTimeInMillis = new Date(expirationTime).getTime();
-    return expirationTimeInMillis - currentTime;
-  };
+    setIsAuthChecked(true);
+  }, []);
 
   const login = (token: string, expirationTime: string) => {
     localStorage.setItem("token", token);
     localStorage.setItem("expirationTime", expirationTime);
-    const remainingTime = calculateRemainingTime(expirationTime);
     setIsLoggedIn(true);
     navigate(`/`);
-    setTimeout(logout, remainingTime);
+    setTimeout(logout, calculateRemainingTime(expirationTime));
   };
 
   const logout = () => {
@@ -49,6 +50,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoggedIn(false);
     navigate(`/signin`);
   };
+
+  if (!isAuthChecked) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, login, logout }}>

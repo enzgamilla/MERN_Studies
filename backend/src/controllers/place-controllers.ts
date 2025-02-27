@@ -28,4 +28,19 @@ const getPlaceByUserId = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { getPlaceById, getPlaceByUserId };
+const createPlace = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const body = req.body;
+
+    if (!body) throw new CustomError("Unable to create a place", 404);
+
+    // logic for creating a place
+    DUMMY_DATA.push(body);
+
+    res.status(201).json(DUMMY_DATA);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { getPlaceById, getPlaceByUserId, createPlace };
