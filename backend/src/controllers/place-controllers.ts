@@ -36,6 +36,7 @@ const createPlace = (req: Request, res: Response, next: NextFunction) => {
 
     // logic for creating a place
     DUMMY_DATA.push(body);
+    console.log(DUMMY_DATA);
 
     res.status(201).json(DUMMY_DATA);
   } catch (error) {

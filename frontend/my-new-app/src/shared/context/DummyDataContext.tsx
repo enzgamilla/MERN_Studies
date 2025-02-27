@@ -1,4 +1,5 @@
 import React, { createContext, useState, ReactNode } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Place } from "../types";
 import { DUMMY_DATA } from "../DummyData";
 
@@ -17,12 +18,13 @@ const DummyDataContext = createContext<DummyDataContextType | undefined>(
 const DummyDataProvider = ({ children }: { children: ReactNode }) => {
   const [dummyData, setDummyData] = useState<Place[]>(DUMMY_DATA);
 
-  const addPlace = (place: Omit<Place, "id" | "dateCreated">) => {
+  const addPlace = async (place: Omit<Place, "id" | "dateCreated">) => {
     const newPlace = {
       ...place,
-      id: Math.random().toString(36).substr(2, 9),
+      id: uuidv4(),
       dateCreated: new Date().toISOString(),
     };
+
     setDummyData((prevData) => [...prevData, newPlace]);
   };
 
